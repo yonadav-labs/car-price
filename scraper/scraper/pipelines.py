@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+
+# Define your item pipelines here
+#
+# Don't forget to add your pipeline to the ITEM_PIPELINES setting
+# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+from scraper import db_manage
+
+class ScraperPipeline(object):
+    def process_item(self, item, spider):
+        return item
+
+    def open_spider(self, spider):
+        pass
+
+    def close_spider(self, spider):
+        db_manage.removeNotCar(spider.db)

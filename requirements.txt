@@ -1,0 +1,5 @@
+Django==1.9.7
+djangorestframework
+MySQL-python
+django-allauth
+stripe
