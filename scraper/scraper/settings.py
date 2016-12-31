@@ -12,6 +12,7 @@
 BOT_NAME = 'scraper'
 
 AVAILABLE_COUNTRY = ["USA", "UK", "Germany", "Switzerland", "Italy", "Spain", "France"]
+AVAILABLE_COUNTRY = ["USA"]
 
 SPIDER_MODULES = ['scraper.spiders']
 NEWSPIDER_MODULE = 'scraper.spiders'
@@ -90,3 +91,10 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+CURRENCY_RATE = {
+	'EUR': 1.05195,
+	'USD': 1, 
+	'GBP': 1.23416,
+	'CHF': 0.981451
+}

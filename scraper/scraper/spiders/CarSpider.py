@@ -22,25 +22,23 @@ class CarPriceSpider(scrapy.Spider):
 
         self.db = db_manage.getDB()
         self.available = db_manage.getGenre(self.db)
+        self.log(self.available)
+        self.log('#######')
         db_manage.setUpdateFlag(self.db)
 
     def start_requests(self):
-	urls = [
-	    'http://www.ooyyo.com/ooyyo-services/resources/indexpage/countryweburls'
-	]
-
-        yield scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/indexpage/countryweburls', headers=self.HEADER, method="POST", body=json.dumps({"isNew": "0", "idPageType": "5", "idCountry": "1", "idLanguage": "47", "idDomain": "1", "idCurrency": "3"}), callback=self.getCountry)
+        yield scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/indexpage/countryweburls', headers=self.HEADER, method="POST", body=json.dumps({"isNew": "0", "idPageType": "5", "idCountry": "1", "idLanguage": "47", "idDomain": "1", "idCurrency": "17"}), callback=self.getCountry)
 
     # get list country.
     def getCountry(self, response):
         temp = json.loads(response.body)
         for cn in temp:
-            if temp[cn]["title"] in settings.AVAILABLE_COUNTRY:
-                
+            if temp[cn]["title"] in settings.AVAILABLE_COUNTRY:                
                 # make request for getting car list
                 request = scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/quicksearch/qselements', headers=self.HEADER, method="POST", body=json.dumps({"qsType": "advanced", "isNew": "0", "idCountry": str(cn), "idLanguage": "47", "idCurrency": "17", "idDomain": "1"}), callback=self.getCars, dont_filter=True)
                 request.meta["country"] = [cn, temp[cn]["title"]]
                 yield request
+
 
     # get car list.
     def getCars(self, response):
@@ -51,7 +49,6 @@ class CarPriceSpider(scrapy.Spider):
         for car in cars:
             available_car = [item for item in self.available if item.lower()==car["name"].lower()]
             if len(available_car) > 0:
-
                 # make request for getting model list
                 request = scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/quicksearch/qselements', headers=self.HEADER, method="POST", body=json.dumps({"qsType": "advanced", "isNew": "0", "idCountry": country[0], "idLanguage": "47", "idCurrency": "17", "idDomain": "1", "idMake": str(car["idMake"])}), callback=self.getModels, dont_filter=True)
 
@@ -59,6 +56,7 @@ class CarPriceSpider(scrapy.Spider):
                 request.meta["cars"] = [car["idMake"], available_car[0]]
 
                 yield request
+
 
     # get model list.
     def getModels(self, response):
@@ -102,28 +100,42 @@ class CarPriceSpider(scrapy.Spider):
         country = response.meta["country"]
         cars = response.meta["cars"]
         models = response.meta["models"]
-
-        nodes = response.xpath("//div[@class='beta']")
+        # nodes = response.xpath("//div[@class='beta']")
+        nodes = response.xpath('//a[@class="car type8 _dcdtrgt"]')
+        # self.log('##########-{}'.format(len(nodes)))
 
         for node in nodes:
             try:
+                car_id = node.xpath(".//img[@itemprop='image']/@data-record").extract()[0].strip() 
                 year = int(node.xpath(".//span[@itemprop='releaseDate']/text()").extract()[0].strip())
+                price_unit = node.xpath(".//span[@itemprop='priceCurrency']/@content").extract()[0].strip()
                 price = float(node.xpath(".//span[@itemprop='price']/@content").extract()[0].strip()) 
-            except:
-                continue;
+                price = int(price * settings.CURRENCY_RATE['price_unit'])
 
-            item = {"country": country[1], "name": cars[1], "model": models[2], "year": year, "price": price}
-            db_manage.save(self.db, item)
+                # self.log("{}-{}-{}-{}#########".format(car_id, year, price, price_unit))
+                # with open('/root/work/123', 'a') as f:
+                #     f.write("{}\t{}\t{}\t{}\n".format(car_id, year, price, price_unit))
+            except:
+                # raise
+                continue
+
+            # check constraints
+            if price < 1000 or year < 1950:
+                continue
+
+            item = {"country": country[1], "name": cars[1], "model": models[2], 
+                    "year": year, "price": price, "car_id": car_id}
+            # db_manage.save(self.db, item)
 
         # make request for the next page
         pagination = response.xpath("//div[@class='pagination type2']//div[contains(@class, 'pagin')]")
         if len(pagination) < 2:
-            return;
+            return
 
         href = pagination[1].xpath(".//a/@href").extract()[0].strip()
 
         if href == "javascript:void(0)":
-            return;
+            return
 
         request = scrapy.Request(self.domain + href, callback=self.getInfomation, dont_filter=False)
         # make request for getting data
