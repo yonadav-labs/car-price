@@ -41,18 +41,15 @@ class CarPriceSpider(scrapy.Spider):
     # get car list.
     def getCars(self, response):
         country = response.meta["country"]
-
         cars = json.loads(response.body)["makes"]['black']
 
         for car in cars:
-            available_car = [item for item in self.available if item.lower()==car["name"].lower()]
-            if len(available_car) > 0:
+            if car["name"] in self.available:
                 # make request for getting model list
                 request = scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/quicksearch/qselements', headers=self.HEADER, method="POST", body=json.dumps({"qsType": "advanced", "isNew": "0", "idCountry": country[0], "idLanguage": "47", "idCurrency": "17", "idDomain": "1", "idMake": str(car["idMake"])}), callback=self.getModels, dont_filter=True)
 
                 request.meta["country"] = country
-                request.meta["cars"] = [car["idMake"], available_car[0]]
-
+                request.meta["cars"] = {'idMake':car["idMake"], 'make_name':car["name"]}
                 yield request
 
 
@@ -64,15 +61,13 @@ class CarPriceSpider(scrapy.Spider):
         models = json.loads(response.body)["models"]['black']
 
         for model in models:
-            available_model = [item for item in self.available[cars[1]] if model["name"].lower() == item.lower()]
-            if len(available_model) > 0:
-
+            if model['name'] in self.available[cars['make_name']]:
                 # make request for getting search url
-                request = scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/quicksearch/qselements', headers=self.HEADER, method="POST", body=json.dumps({"qsType": "advanced", "isNew": "0", "idCountry": country[0], "idLanguage": "47", "idCurrency": "17", "idDomain": "1", "idMake": str(cars[0]), "idModel": str(model["idModel"])}), callback=self.getSearchUrl, dont_filter=True)
+                request = scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/quicksearch/qselements', headers=self.HEADER, method="POST", body=json.dumps({"qsType": "advanced", "isNew": "0", "idCountry": country[0], "idLanguage": "47", "idCurrency": "17", "idDomain": "1", "idMake": str(cars['idMake']), "idModel": str(model["idModel"])}), callback=self.getSearchUrl, dont_filter=True)
 
                 request.meta["country"] = country
+                cars['model_name'] = model['name']
                 request.meta["cars"] = cars
-                request.meta["models"] = [model["idModel"], available_model[0], self.available[cars[1]][available_model[0]]]
                 
                 yield request
 
@@ -80,7 +75,6 @@ class CarPriceSpider(scrapy.Spider):
     def getSearchUrl(self, response):
         country = response.meta["country"]
         cars = response.meta["cars"]
-        models = response.meta["models"]
 
         search_url = json.loads(response.body)["url"]
 
@@ -88,19 +82,14 @@ class CarPriceSpider(scrapy.Spider):
         # make request for getting data
         request.meta["country"] = country
         request.meta["cars"] = cars
-        request.meta["models"] = models
 
-        print search_url
         yield request
         
     # get list of cars.
     def getInfomation(self, response):
         country = response.meta["country"]
         cars = response.meta["cars"]
-        models = response.meta["models"]
-        # nodes = response.xpath("//div[@class='beta']")
         nodes = response.xpath('//a[@class="car type8 _dcdtrgt"]')
-        # self.log('##########-{}'.format(len(nodes)))
 
         for node in nodes:
             try:
@@ -109,10 +98,6 @@ class CarPriceSpider(scrapy.Spider):
                 price_unit = node.xpath(".//span[@itemprop='priceCurrency']/@content").extract()[0].strip()
                 price = float(node.xpath(".//span[@itemprop='price']/@content").extract()[0].strip()) 
                 price = int(price * settings.CURRENCY_RATE[price_unit])
-
-                # self.log("{}-{}-{}-{}#########".format(car_id, year, price, price_unit))
-                # with open('/root/work/123', 'a') as f:
-                #     f.write("{}\t{}\t{}\t{}\n".format(car_id, year, price, price_unit))
             except:
                 continue
 
@@ -120,9 +105,18 @@ class CarPriceSpider(scrapy.Spider):
             if price < 1000 or year < 1950:
                 continue
 
-            item = {"country": country[1], "name": cars[1], "model": models[2], 
-                    "year": year, "price": price, "car_id": car_id}
-            # db_manage.save(self.db, item)
+            year_filter = self.available[cars['make_name']][cars['model_name']]['year_filter']
+            flag = False
+            for f_item in year_filter:
+                if f_item['from'] <= year and year <= f_item['to']:
+                    flag = True
+                    break
+            if flag:                    
+                item = {"country": country[1], "name": self.available[cars['make_name']]['alias'], 
+                        "brand": self.available[cars['make_name']][cars['model_name']], 
+                        "year": year, "price": price, "car_id": car_id, "prev_price": price}
+                self.log(str(item)+'#############')
+                # db_manage.save(self.db, item)
 
         # make request for the next page
         pagination = response.xpath("//div[@class='pagination type2']//div[contains(@class, 'pagin')]")
@@ -138,6 +132,5 @@ class CarPriceSpider(scrapy.Spider):
         # make request for getting data
         request.meta["country"] = country
         request.meta["cars"] = cars
-        request.meta["models"] = models
         yield request
 

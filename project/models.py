@@ -11,7 +11,8 @@ class Car(models.Model):
     year = models.IntegerField()
     price = models.IntegerField()
     prev_price = models.IntegerField()
-    updated_on = models.DateField(auto_now_add=True)
+    updated_on = models.DateField(auto_now=True)
+    updated = models.IntegerField(default=1)
     type = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
