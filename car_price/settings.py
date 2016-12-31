@@ -44,13 +44,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
 
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.stripe',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.stripe',
 
     # 'tinymce',
 ]
@@ -95,10 +95,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-AUTHENTICATION_BACKENDS = (
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
+# AUTHENTICATION_BACKENDS = (
+#     # `allauth` specific authentication methods, such as login by e-mail
+#     'allauth.account.auth_backends.AuthenticationBackend',
+# )
 
 SITE_ID = 1
 
@@ -196,7 +196,7 @@ COUNTRY = [
 
 CURRENCY = {
              "USD": {"name": "USD", "currency_rate": 1, "currency": "$"},
-             "EUR": {"name": "USD", "currency_rate": 0.96, "currency": "€"},
+             "EUR": {"name": "EUR", "currency_rate": 0.96, "currency": "€"},
              "GBP": {"name": "GBP", "currency_rate": 0.8, "currency": "£"},
              "CHF": {"name": "CHF", "currency_rate": 1.03, "currency": "Fr"},
           }

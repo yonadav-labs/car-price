@@ -10,7 +10,7 @@ from django.http import HttpResponse
 
 import json
 from django.views.decorators.csrf import csrf_exempt
-from allauth.socialaccount.models import SocialAccount
+# from allauth.socialaccount.models import SocialAccount
 
 from django.db.models import Q, Avg, Count
 

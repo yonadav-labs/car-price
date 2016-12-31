@@ -22,8 +22,6 @@ class CarPriceSpider(scrapy.Spider):
 
         self.db = db_manage.getDB()
         self.available = db_manage.getGenre(self.db)
-        self.log(self.available)
-        self.log('#######')
         db_manage.setUpdateFlag(self.db)
 
     def start_requests(self):
@@ -110,13 +108,12 @@ class CarPriceSpider(scrapy.Spider):
                 year = int(node.xpath(".//span[@itemprop='releaseDate']/text()").extract()[0].strip())
                 price_unit = node.xpath(".//span[@itemprop='priceCurrency']/@content").extract()[0].strip()
                 price = float(node.xpath(".//span[@itemprop='price']/@content").extract()[0].strip()) 
-                price = int(price * settings.CURRENCY_RATE['price_unit'])
+                price = int(price * settings.CURRENCY_RATE[price_unit])
 
                 # self.log("{}-{}-{}-{}#########".format(car_id, year, price, price_unit))
                 # with open('/root/work/123', 'a') as f:
                 #     f.write("{}\t{}\t{}\t{}\n".format(car_id, year, price, price_unit))
             except:
-                # raise
                 continue
 
             # check constraints

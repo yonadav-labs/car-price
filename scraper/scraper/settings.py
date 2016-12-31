@@ -93,7 +93,7 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 CURRENCY_RATE = {
-	'EUR': 1.05195,
+	'EUR': 1.05160,
 	'USD': 1, 
 	'GBP': 1.23416,
 	'CHF': 0.981451
