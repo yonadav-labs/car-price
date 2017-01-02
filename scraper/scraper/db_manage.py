@@ -1,9 +1,7 @@
 #!/usr/bin/python
 import os
 from os import sys, path
-import MySQLdb
 import django
-
 
 sys.path.append(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "car_price.settings")
@@ -11,14 +9,8 @@ django.setup()
 
 from project.models import *
 
-def getDB():
-    return MySQLdb.connect(host="localhost",    # your host, usually localhost
-                           user="root",         # your username
-                           passwd="newfirst",   # your password
-                           db="Car")            # name of the data base
 
-
-def getGenre(db):
+def getGenre():
     genre = {}
     for make in Make.objects.all():
         make_name = make.name.lower().strip()
@@ -33,7 +25,7 @@ def getGenre(db):
     return genre
 
 
-def save(db, item):
+def save(item):
     car = Car.objects.filter(car_id=item["car_id"]).first()
     if car:
         car.prev_price = car.price
@@ -44,16 +36,10 @@ def save(db, item):
     car.save()
 
 
-def setUpdateFlag(db):
-    cur = db.cursor()
-    cur.execute("update CarPrice set updated=0") ##@@##
-    # cur.execute("update CarPrice set updated=0 where country='USA'")
-    db.commit()
+def setUpdateFlag():
+    Car.objects.all().update(updated=0)
 
 
-def removeNotCar(db):
-    cur = db.cursor()
-    cur.execute("delete from CarPrice where updated=0") ##@@##
-    # cur.execute("delete from CarPrice where updated=0 and country='USA'")
-    db.commit()
+def removeNotCar():
+    Car.objects.filter(updated=0).delete()
     

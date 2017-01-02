@@ -20,10 +20,9 @@ class CarPriceSpider(scrapy.Spider):
                           "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)                           Chrome/55.0.2883.87 Safari/537.36",
                           "X-Requested-With": "XMLHttpRequest"}
 
-        self.db = db_manage.getDB()
-        self.available = db_manage.getGenre(self.db)
+        self.available = db_manage.getGenre()
         # self.log(str(self.available)+'@@@@@@@')
-        db_manage.setUpdateFlag(self.db) ##@@##
+        db_manage.setUpdateFlag() ##@@##
 
     def start_requests(self):
         yield scrapy.Request('http://www.ooyyo.com/ooyyo-services/resources/indexpage/countryweburls', headers=self.HEADER, method="POST", body=json.dumps({"isNew": "0", "idPageType": "5", "idCountry": "1", "idLanguage": "47", "idDomain": "1", "idCurrency": "17"}), callback=self.getCountry)
@@ -126,7 +125,7 @@ class CarPriceSpider(scrapy.Spider):
                         "brand": self.available[cars['make_name']][cars['model_name']]['alias'], 
                         "year": year, "price": price, "car_id": car_id, "prev_price": price}
                 self.log(str(item)+'#############')
-                db_manage.save(self.db, item)
+                db_manage.save(item)
 
         # make request for the next page
         pagination = response.xpath("//div[@class='pagination type2']//div[contains(@class, 'pagin')]")
@@ -143,8 +142,3 @@ class CarPriceSpider(scrapy.Spider):
         request.meta["country"] = country
         request.meta["cars"] = cars
         yield request
-
-
-# def tolerent_check(key, list_):
-#     t_list = [item.lower().strip() for item in list_]
-#     return key.lower().strip() in t_list

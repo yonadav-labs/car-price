@@ -15,4 +15,4 @@ class ScraperPipeline(object):
 
     def close_spider(self, spider):
     	# pass
-        db_manage.removeNotCar(spider.db) ##@@##
+        db_manage.removeNotCar() ##@@##
