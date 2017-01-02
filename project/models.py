@@ -26,6 +26,9 @@ class Make(models.Model):
     def __unicode__(self):
         return self.alias
 
+    class Meta:
+        ordering = ('name',)
+
 
 class Model(models.Model):
     make = models.ForeignKey(Make)
@@ -33,7 +36,10 @@ class Model(models.Model):
     alias = models.CharField(max_length=100)
 
     def __unicode__(self):
-        return "{} - {}".format(self.make.alias, self.alias)
+        return "{} - {} - {}".format(self.make.alias, self.alias, self.name)
+
+    class Meta:
+        ordering = ('make__alias', 'name')
 
 
 class YearFilter(models.Model):
