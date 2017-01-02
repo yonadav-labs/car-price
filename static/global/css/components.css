@@ -12653,7 +12653,7 @@ Scrollable Tables
   .table-scrollable.table-scrollable-borderless {
     border: 0; }
   .table-scrollable > .table {
-    width: 100% !important;
+    /*width: 100% !important;*/
     margin: 0 !important;
     margin-bottom: 0;
     background-color: #fff; }

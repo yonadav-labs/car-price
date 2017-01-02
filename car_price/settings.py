@@ -190,7 +190,6 @@ COUNTRY = [
              {"name": "France", "flag": "fr", "currency_rate": 0.96, "currency": "€"}, 
              {"name": "Germany", "flag": "de", "currency_rate": 0.96, "currency": "€"}, 
              {"name": "Italy", "flag": "it", "currency_rate": 0.96, "currency": "€"}, 
-             {"name": "Spain", "flag": "es", "currency_rate": 0.96, "currency": "€"}, 
              {"name": "Switzerland", "flag": "sz", "currency_rate": 1.03, "currency": "Fr"}, 
           ]
 

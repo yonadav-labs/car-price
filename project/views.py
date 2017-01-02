@@ -33,7 +33,7 @@ def main(request):
                                      .annotate(davg=Avg('price'), pavg=Avg('prev_price'))
         
         temp_data = OrderedDict()
-        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Spain"],temp_data["Switzerland"], = None, None,None, None,None, None,None        
+        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"] ,temp_data["Switzerland"], = None, None, None, None, None, None
          
         for item in car_per_country:
             if item["country"] in temp_data.keys():
@@ -67,8 +67,7 @@ def req_brand(request, car_name):
         car_per_country = Car.objects.filter(name=car_name, brand=brand["brand"]).values('country').annotate(davg=Avg('price'), pavg=Avg('prev_price'))
 
         temp_data = OrderedDict()
-        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Spain"],temp_data["Switzerland"], = None, None,None, None,None, None,None
-        
+        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Switzerland"], = None, None, None, None,None, None        
          
         for item in car_per_country:
             if item["country"] in temp_data.keys():
@@ -104,9 +103,8 @@ def req_year(request, car_name, brand):
         car_per_country = Car.objects.filter(name=car_name, brand=brand, year=year["year"]).values('country').annotate(davg=Avg('price'), pavg=Avg('prev_price'))
 
         temp_data = OrderedDict()
-        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Spain"],temp_data["Switzerland"], = None, None,None, None,None, None,None
-        
-         
+        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"],temp_data["Switzerland"], = None, None,None, None,None, None
+                 
         for item in car_per_country:
             if item["country"] in temp_data.keys():
                 item["davg"] *= currency["currency_rate"]
