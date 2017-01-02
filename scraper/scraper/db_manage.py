@@ -46,14 +46,14 @@ def save(db, item):
 
 def setUpdateFlag(db):
     cur = db.cursor()
-    # cur.execute("update CarPrice set updated=0") ##@@##
-    cur.execute("update CarPrice set updated=0 where country='USA'")
+    cur.execute("update CarPrice set updated=0") ##@@##
+    # cur.execute("update CarPrice set updated=0 where country='USA'")
     db.commit()
 
 
 def removeNotCar(db):
     cur = db.cursor()
-    # cur.execute("delete from CarPrice where updated=0") ##@@##
-    cur.execute("delete from CarPrice where updated=0 and country='USA'")
+    cur.execute("delete from CarPrice where updated=0") ##@@##
+    # cur.execute("delete from CarPrice where updated=0 and country='USA'")
     db.commit()
     
