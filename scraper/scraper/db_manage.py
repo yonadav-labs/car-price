@@ -21,11 +21,14 @@ def getDB():
 def getGenre(db):
     genre = {}
     for make in Make.objects.all():
-        genre[make.name] = {'alias': make.alias}
+        make_name = make.name.lower().strip()
+        genre[make_name] = {'alias': make.alias}
         for model in Model.objects.filter(make=make):
             year_filter = [{'from': item.from_year, 'to': item.to_year} for item in YearFilter.objects.filter(model=model)]
-            genre[make.name][model.name] = {'alias': model.alias}
-            genre[make.name][model.name]['year_filter'] = year_filter
+            model_name = model.name.lower().strip()
+
+            genre[make_name][model_name] = {'alias': model.alias}
+            genre[make_name][model_name]['year_filter'] = year_filter
 
     return genre
 
@@ -35,22 +38,22 @@ def save(db, item):
     if car:
         car.prev_price = car.price
         car.price = item["price"]
+        car.updated = 1
     else:
         car = Car(**item)
     car.save()
 
 
-
 def setUpdateFlag(db):
     cur = db.cursor()
-    # cur.execute("update CarPrice set updated=0")
+    # cur.execute("update CarPrice set updated=0") ##@@##
     cur.execute("update CarPrice set updated=0 where country='USA'")
     db.commit()
 
 
 def removeNotCar(db):
     cur = db.cursor()
-    # cur.execute("delete from CarPrice where updated=0")
+    # cur.execute("delete from CarPrice where updated=0") ##@@##
     cur.execute("delete from CarPrice where updated=0 and country='USA'")
     db.commit()
     

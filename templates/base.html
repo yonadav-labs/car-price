@@ -17,7 +17,7 @@
 
         <meta charset="utf-8" />
 
-        <title>{{car_name|default_if_none:"Supercar Prices"}} {{car_brand|default_if_none:""}} | Supercar Report</title>
+        <title>{{car_name|default_if_none:"Supercar"}} {{car_brand|default_if_none:""}} Prices | Supercar Report</title>
 
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -60,7 +60,7 @@
 
         {% block extra_css %}{% endblock %}
 
-        <link rel="shortcut icon" href="favicon.ico" /> 
+        <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" /> 
 
         <style>
             @media (max-width: 886px){

@@ -10,7 +10,7 @@
             {{car_name|default_if_none:"Supercar"}} {{car_brand|default_if_none:""}} Prices</div>
     </div>
     <div class="portlet-body">
-        <div class="table-responsive">
+        <div class="table-responsive1">
             <table class="table">
                 <thead>
                     <tr>
@@ -28,7 +28,7 @@
                                      {% elif car_name != None %} {% url 'year' car_name=car_name|slugify brand=name|slugify %}
                                      {% else %} {% url 'brand' car_name=name|slugify %} {% endif %}">{{name}}</a> </td>
                         {% for cn in res|dict:name %}
-                        <td> {% if res|dict:name|dict:cn|dict:'percent' != None %}{{currency.currency}}{%endif%}{{res|dict:name|dict:cn|dict:'davg'|currency}} {% if res|dict:name|dict:cn|dict:'percent' != None %}(<span style="color: {%if res|dict:name|dict:cn|dict:'percent'|getFloat < 0.0 %} red; {%else%} #0ea600; {%endif%}">{{res|dict:name|dict:cn|dict:'percent'}} %</span>){% endif %}</td>
+                        <td> {% if res|dict:name|dict:cn|dict:'percent' != None %}{{currency.currency}}{%endif%}{{res|dict:name|dict:cn|dict:'davg'|currency}} {% if res|dict:name|dict:cn|dict:'percent' != None %}<span style="float:right;">(<span style="color: {%if res|dict:name|dict:cn|dict:'percent'|getFloat < 0.0 %} red; {%else%} #0ea600; {%endif%}">{{res|dict:name|dict:cn|dict:'percent'}} %</span>)</span>{% endif %}</td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
@@ -77,6 +77,11 @@
 <script src="{% static 'global/plugins/highcharts/js/highcharts-more.js' %}"" type="text/javascript"></script>
 
 <script>
+Highcharts.setOptions({
+    lang: {
+        thousandsSep: ','
+    }
+});
 
 $('#highchart_1').highcharts({
         chart : {
@@ -84,90 +89,92 @@ $('#highchart_1').highcharts({
                 fontFamily: 'Open Sans'
             }
         },
-		title: {
-			text: '',
-			x: -20 //center
-		},
-		/*subtitle: {
-			text: 'Source: WorldClimate.com',
-			x: -20
-		},*/
-		yAxis: {
-			title: {
-				text: 'Price ({{currency.currency}})'
-			},
-			plotLines: [{
-				value: 0,
-				width: 1,
-				color: '#808080'
-			}]
-		},
-                xAxis: {
-                         title: {
-				text: 'Year'
-			},
-		},
-		tooltip: {
-			valuePrefix: '{{currency.currency}}'
-		},
-		legend: {
-			layout: 'vertical',
-			align: 'right',
-			verticalAlign: 'middle',
-			borderWidth: 0
-		},
-		series: [
+        title: {
+            text: '',
+            x: -20 //center
+        },
+        /*subtitle: {
+            text: 'Source: WorldClimate.com',
+            x: -20
+        },*/
+        yAxis: {
+            title: {
+                text: 'Price ({{currency.currency}})'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        xAxis: {
+            title: {
+                text: 'Year'
+            },
+        },
+        tooltip: {
+            valueDecimals: 0,
+            valuePrefix: '{{currency.currency}}',
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [
                     {% for data in chartData|dict:0 %}
                     {name: '{{data|dict:"name"}}', data: {{data|dict:"data"}}},
                     {% endfor %}
                 ]
-	});
+    });
 
-        $('#highchart_2').highcharts({
+    $('#highchart_2').highcharts({
         chart : {
             style: {
                 fontFamily: 'Open Sans'
             }
         },
-		title: {
-			text: '',
-			x: -20 //center
-		},
-		/*subtitle: {
-			text: 'Source: WorldClimate.com',
-			x: -20
-		},*/
-		yAxis: {
-			title: {
-				text: 'Price ({{currency.currency}})'
-			},
-			plotLines: [{
-				value: 0,
-				width: 1,
-				color: '#808080'
-			}]
-		},
-                xAxis: {
-                         title: {
-				text: 'Year'
-			},
-			categories: {{chartData|dict:2}}
-		},
-		tooltip: {
-			valuePrefix: '{{currency.currency}}'
-		},
-		legend: {
-			layout: 'vertical',
-			align: 'right',
-			verticalAlign: 'middle',
-			borderWidth: 0
-		},
-		series: [
+        title: {
+            text: '',
+            x: -20 //center
+        },
+        /*subtitle: {
+            text: 'Source: WorldClimate.com',
+            x: -20
+        },*/
+        yAxis: {
+            title: {
+                text: 'Price ({{currency.currency}})'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        xAxis: {
+            title: {
+            text: 'Year'
+        },
+        categories: {{chartData|dict:2}}
+        },
+        tooltip: {
+            valueDecimals: 0,
+            valuePrefix: '{{currency.currency}}'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series: [
                     {% for data in chartData|dict:1 %}
                     {name: '{{data|dict:"name"}}', data: {{data|dict:"data"}}},
                     {% endfor %}
                 ]
-	});
+    });
 
 </script>
 {% endblock %}

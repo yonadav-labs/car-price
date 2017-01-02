@@ -12,7 +12,7 @@
 BOT_NAME = 'scraper'
 
 AVAILABLE_COUNTRY = ["USA", "UK", "Germany", "Switzerland", "Italy", "Spain", "France"]
-AVAILABLE_COUNTRY = ["USA"]
+AVAILABLE_COUNTRY = ["USA", "Spain"] ##@@##
 
 SPIDER_MODULES = ['scraper.spiders']
 NEWSPIDER_MODULE = 'scraper.spiders'

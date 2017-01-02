@@ -1,28 +1,24 @@
-from django.shortcuts import render_to_response, redirect
-from project.models import *
-from django.template import RequestContext
-from django.contrib.auth.models import *
-
-from functools import wraps
-
 import datetime
-from django.http import HttpResponse
-
 import json
-from django.views.decorators.csrf import csrf_exempt
-# from allauth.socialaccount.models import SocialAccount
-
-from django.db.models import Q, Avg, Count
-
-from car_price import settings
 from collections import OrderedDict
 
+from django.shortcuts import render_to_response, redirect
+from django.template import RequestContext
+from django.contrib.auth.models import *
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q, Avg, Count
 from django.template.defaultfilters import slugify
+
+from car_price import settings
+from functools import wraps
+from project.models import *
+
 
 def main(request):
     country_label = settings.COUNTRY
-
     currency_label = settings.CURRENCY
+
     try:
         currency = currency_label[request.GET["currency"]]
     except:
@@ -32,12 +28,12 @@ def main(request):
     names = Car.objects.values('name').distinct().order_by("name")
 
     for name in names:
-
-        car_per_country = Car.objects.filter(name=name["name"]).values('country').annotate(davg=Avg('price'), pavg=Avg('prev_price'))
+        car_per_country = Car.objects.filter(name=name["name"]) \
+                                     .values('country') \
+                                     .annotate(davg=Avg('price'), pavg=Avg('prev_price'))
         
         temp_data = OrderedDict()
-        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Spain"],temp_data["Switzerland"], = None, None,None, None,None, None,None
-        
+        temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Spain"],temp_data["Switzerland"], = None, None,None, None,None, None,None        
          
         for item in car_per_country:
             if item["country"] in temp_data.keys():
