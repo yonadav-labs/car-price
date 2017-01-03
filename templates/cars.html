@@ -145,6 +145,8 @@ Highcharts.setOptions({
     }
 });
 
+var colors = ['#00FFFF', '#000000', '#0000FF', '#FF00FF', '#800000', '#00FF00', '#008000', '#808080', '#000080', '#808000', '#800080', '#FF0000', '#FFFF00', '#008080', '#C0C0C0', '#6A2719', '#1F6A19', '#46CFDC', '#6146DC', '#DC46C1'];
+
 $('#highchart_1').highcharts({
         chart : {
             style: {
@@ -186,7 +188,7 @@ $('#highchart_1').highcharts({
         },
         series: [
                     {% for data in chartData|dict:0 %}
-                    {name: '{{data|dict:"name"}}', data: {{data|dict:"data"}}},
+                    {name: '{{data|dict:"name"}}', data: {{data|dict:"data"}}, color: colors[{{ forloop.counter0 }}]},
                     {% endfor %}
                 ]
     });
@@ -233,7 +235,7 @@ $('#highchart_1').highcharts({
         },
         series: [
                     {% for data in chartData|dict:1 %}
-                    {name: '{{data|dict:"name"}}', data: {{data|dict:"data"}}},
+                    {name: '{{data|dict:"name"}}', data: {{data|dict:"data"}}, color: colors[{{ forloop.counter0 }}]},
                     {% endfor %}
                 ]
     });
