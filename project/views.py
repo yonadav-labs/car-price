@@ -6,6 +6,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.contrib.auth.models import *
 from django.http import HttpResponse
+from django.http import HttpResponseNotFound  
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Avg, Count
 from django.template.defaultfilters import slugify
@@ -55,6 +56,9 @@ def main(request):
 def req_brand(request, car_name):
     country_label = settings.COUNTRY
     car_name = getNameFromSlug(car_name, "name")
+    if not car_name:
+        return HttpResponseNotFound('<h1>No Page Here (404)</h1>')
+
     currency_label = settings.CURRENCY
 
     try:
@@ -100,7 +104,12 @@ def req_year(request, car_name, brand):
         currency = currency_label["USD"]
 
     car_name = getNameFromSlug(car_name, "name")
+    if not car_name:
+        return HttpResponseNotFound('<h1>No Page Here (404)</h1>')
+    
     car_brand = getNameFromSlug(brand, "brand")
+    if not car_brand:
+        return HttpResponseNotFound('<h1>No Page Here (404)</h1>')
     brand = car_brand
 
     res = OrderedDict()
@@ -203,12 +212,12 @@ def getNameFromSlug(slug, type):
         names = Car.objects.values('name').distinct()
         names = {slugify(name["name"]):name["name"] for name in names}
 
-        return names[slug]
+        return names.get(slug)
     elif type == "brand":
         brands = Car.objects.values('brand').distinct()
         brands = {slugify(brand["brand"]):brand["brand"] for brand in brands}
 
-        return brands[slug]
+        return brands.get(slug)
 
 
 def getKey(item):

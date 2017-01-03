@@ -28,7 +28,7 @@ SECRET_KEY = '6%yd7zq%dc=2e_$w2qa_!-(s%t*m^kr(82ke5=m-j*in2*ve*^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'supercarreport.com']
 
 
 # Application definition
