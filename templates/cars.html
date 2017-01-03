@@ -34,10 +34,10 @@
     </div>
     <div class="portlet-body">
         <div class="table-scrollable">
-            <table class="table">
+            <table class="table" style="table-layout: fixed;">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th class="car-price-td"></th>
                         {% for ct in country_label %}
                         <th class="car-price-td"><span class="flag flag-{{ct.flag}}" style="position: relative; top: 3px;"></span> <span style="margin-left: 5px;">{{ct.name}}</span> </th>
                         {% endfor %}
