@@ -20,7 +20,8 @@
         <title>{{car_name|default_if_none:"Supercar"}} {{car_brand|default_if_none:""}} Prices | Supercar Report</title>
 
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+        {% block meta_description %}
+        {% endblock %}
         <meta content="width=device-width, initial-scale=1" name="viewport" />
 
         <meta content="" name="author" />
@@ -137,10 +138,10 @@
                                 <form style="width: initial; float: right;" method="GET" name="currForm" class="m4-gt-886 m8-lt-886">
                                     <div class="input-group">
                                         <select class="form-control" style="width: 200px; color: black; background: white;" onchange="document.currForm.submit()" name="currency">
-		                            {% for cr in currency_label %}
-						<option value="{{cr}}" {% if cr == currency.name %} selected {%endif%}> <span style="margin-left: 5px;">{{cr}}</span> ({{currency_label|dict:cr|dict:"currency"}}) </th>
-				            {% endfor %}
-		                        </select>
+                                            {% for cr in currency_label %}
+                                                <option value="{{cr}}" {% if cr == currency.name %} selected {%endif%}> <span style="margin-left: 5px;">{{cr}}</span> ({{currency_label|dict:cr|dict:"currency"}}) </th>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </form>
                               <div class="hor-menu">
@@ -229,10 +230,10 @@
                                 <div class="col-md-3 col-sm-6 col-xs-12 footer-block">
                                     <h2 style="color: #a01922">Follow Us On</h2>
                                     <ul class="social-icons">
-					<li>
+                                        <li>
                                             <a href="javascript: window.open('https://twitter.com/supercarreport', '_blank')" data-original-title="twitter" class="twitter"></a>
                                         </li>
-					
+                    
                                         <li>
                                             <a href="javascript: window.open('https://www.facebook.com/SupercarReport/', '_blank')" data-original-title="facebook" class="facebook"></a>
                                         </li>
@@ -309,7 +310,4 @@
 
         </script>
     </body>
-
-
-
 </html>

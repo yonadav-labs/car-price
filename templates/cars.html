@@ -2,6 +2,10 @@
 {% load static %}
 {% load custom_tag %}
 
+{% block meta_description %}
+<meta name="description" content="{{ meta_description }}">
+{% endblock %}
+
 {% block content %}
 <style type="text/css">
     @media (max-width: 1024px) {

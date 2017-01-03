@@ -49,6 +49,7 @@ def main(request):
     chartData = getChartData(dict(), currency["currency_rate"], type)
     menu = getMenu()
     car_name = None
+    meta_description = "Visit Supercar Report to view Supercar Prices from around the world. The Supercar Prices are updated daily to provide you the most accurate Supercar Price Guide available. "
 
     return render_to_response('cars.html', locals(), context_instance=RequestContext(request))
 
@@ -90,7 +91,7 @@ def req_brand(request, car_name):
 
     chartData = getChartData({"car_name": car_name}, currency["currency_rate"])
     menu = getMenu()
-
+    meta_description = "Visit Supercar Report to view {} Prices from around the world. The {} Prices are updated weekly to provide you the most accurate {} Price Guide available.".format(car_name,car_name,car_name)
     return render_to_response('cars.html', locals(), context_instance=RequestContext(request))
 
 
@@ -106,7 +107,7 @@ def req_year(request, car_name, brand):
     car_name = getNameFromSlug(car_name, "name")
     if not car_name:
         return HttpResponseNotFound('<h1>No Page Here (404)</h1>')
-    
+
     car_brand = getNameFromSlug(brand, "brand")
     if not car_brand:
         return HttpResponseNotFound('<h1>No Page Here (404)</h1>')
@@ -136,6 +137,7 @@ def req_year(request, car_name, brand):
 
     chartData = getChartData({"car_name": car_name, "car_brand": car_brand}, currency["currency_rate"])
     menu = getMenu()
+    meta_description = "Visit Supercar Report to view {} {} Prices from around the world. The {} {} Prices are updated weekly to provide you the most accurate {} {} Price Guide available.".format(car_name, car_brand, car_name, car_brand, car_name, car_brand)
 
     return render_to_response('cars.html', locals(), context_instance=RequestContext(request))
 
