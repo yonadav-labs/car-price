@@ -40,7 +40,9 @@ def main(request):
                 item["davg"] *= currency["currency_rate"]
                 item["pavg"] *= currency["currency_rate"]
                 item["percent"] = (item["davg"] - item["pavg"]) * 100 / item["davg"]
-                temp_data[item["country"]] = {"davg": int(item["davg"]), "pavg": int(item["pavg"]), "percent": item["percent"]}
+                temp_data[item["country"]] = {"davg": int(item["davg"]), 
+                                              "pavg": int(item["pavg"]), 
+                                              "percent": item["percent"]}
 
         res[name["name"]] = temp_data
     chartData = getChartData(dict(), currency["currency_rate"], type)
@@ -49,12 +51,12 @@ def main(request):
 
     return render_to_response('cars.html', locals(), context_instance=RequestContext(request))
 
+
 def req_brand(request, car_name):
     country_label = settings.COUNTRY
-
     car_name = getNameFromSlug(car_name, "name")
-
     currency_label = settings.CURRENCY
+
     try:
         currency = currency_label[request.GET["currency"]]
     except:
@@ -64,7 +66,9 @@ def req_brand(request, car_name):
     brands = Car.objects.filter(name=car_name).values('brand').distinct().order_by("brand")
 
     for brand in brands:
-        car_per_country = Car.objects.filter(name=car_name, brand=brand["brand"]).values('country').annotate(davg=Avg('price'), pavg=Avg('prev_price'))
+        car_per_country = Car.objects.filter(name=car_name, brand=brand["brand"]) \
+                                     .values('country') \
+                                     .annotate(davg=Avg('price'), pavg=Avg('prev_price'))
 
         temp_data = OrderedDict()
         temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"], temp_data["Switzerland"], = None, None, None, None,None, None        
@@ -74,7 +78,9 @@ def req_brand(request, car_name):
                 item["davg"] *= currency["currency_rate"]
                 item["pavg"] *= currency["currency_rate"]
                 item["percent"] = (item["davg"] - item["pavg"]) * 100 / item["davg"]
-                temp_data[item["country"]] = {"davg": int(item["davg"]), "pavg": int(item["pavg"]), "percent": item["percent"]}
+                temp_data[item["country"]] = {"davg": int(item["davg"]), 
+                                              "pavg": int(item["pavg"]), 
+                                              "percent": item["percent"]}
 
         res[brand["brand"]] = temp_data
 
@@ -83,10 +89,11 @@ def req_brand(request, car_name):
 
     return render_to_response('cars.html', locals(), context_instance=RequestContext(request))
 
+
 def req_year(request, car_name, brand):
     country_label = settings.COUNTRY
-
     currency_label = settings.CURRENCY
+
     try:
         currency = currency_label[request.GET["currency"]]
     except:
@@ -100,7 +107,9 @@ def req_year(request, car_name, brand):
     years = Car.objects.filter(name=car_name, brand=brand).values('year').distinct().order_by("-year")
 
     for year in years:
-        car_per_country = Car.objects.filter(name=car_name, brand=brand, year=year["year"]).values('country').annotate(davg=Avg('price'), pavg=Avg('prev_price'))
+        car_per_country = Car.objects.filter(name=car_name, brand=brand, year=year["year"]) \
+                                     .values('country') \
+                                     .annotate(davg=Avg('price'), pavg=Avg('prev_price'))
 
         temp_data = OrderedDict()
         temp_data["USA"], temp_data["UK"], temp_data["France"], temp_data["Germany"], temp_data["Italy"],temp_data["Switzerland"], = None, None,None, None,None, None
@@ -110,7 +119,9 @@ def req_year(request, car_name, brand):
                 item["davg"] *= currency["currency_rate"]
                 item["pavg"] *= currency["currency_rate"]
                 item["percent"] = (item["davg"] - item["pavg"]) * 100 / item["davg"]
-                temp_data[item["country"]] = {"davg": int(item["davg"]), "pavg": int(item["pavg"]), "percent": item["percent"]}
+                temp_data[item["country"]] = {"davg": int(item["davg"]), 
+                                              "pavg": int(item["pavg"]), 
+                                              "percent": item["percent"]}
 
         res[year["year"]] = temp_data
 
@@ -119,6 +130,7 @@ def req_year(request, car_name, brand):
 
     return render_to_response('cars.html', locals(), context_instance=RequestContext(request))
 
+
 def getMenu():
     names = Car.objects.values('name').annotate(count=Count('price')).order_by("name")
 
@@ -126,6 +138,7 @@ def getMenu():
     for name in names:
         res[name["name"]] = [name, Car.objects.filter(name=name["name"]).values('brand').annotate(count=Count('brand')).order_by("brand")]
     return res
+
 
 def getChartData(param, currency_rate, type=None):
     # get chart data
@@ -154,7 +167,10 @@ def getChartData(param, currency_rate, type=None):
 
 
     if "car_brand" in param:
-        temp = Car.objects.filter(name=param['car_name'], brand=param['car_brand']).values("year", "country").annotate(davg=Avg('price')).order_by("country")
+        temp = Car.objects.filter(name=param['car_name'], brand=param['car_brand']) \
+                          .values("year", "country") \
+                          .annotate(davg=Avg('price')) \
+                          .order_by("country")
     elif "car_name" in param:
         temp = Car.objects.filter(name=param['car_name']).values("year", "country") \
                            .annotate(davg=Avg('price')).order_by("country")
@@ -173,6 +189,8 @@ def getChartData(param, currency_rate, type=None):
     # for name in tp_chartDataForCountry:   ##@@##
     for country in settings.COUNTRY:
         name = country['name']
+        if name not in tp_chartDataForCountry:
+            continue
 
         data = sorted(tp_chartDataForCountry[name], key=getKey)
         chartDataForCountry.append({"name": name, "data": data})
@@ -195,5 +213,3 @@ def getNameFromSlug(slug, type):
 
 def getKey(item):
     return item[0]
-
-
