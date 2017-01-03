@@ -6,7 +6,7 @@ admin.site.register(Car)
 class ModelTabularInline(admin.TabularInline):
     model = Model
     extra = 0
-    fields = ['name', 'alias']
+    fields = ['name', 'alias', 'min_price', 'max_price']
 
 class MakeAdmin(admin.ModelAdmin):
     inlines = [ModelTabularInline]

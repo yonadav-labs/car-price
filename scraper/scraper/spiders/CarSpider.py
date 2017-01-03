@@ -111,7 +111,10 @@ class CarPriceSpider(scrapy.Spider):
                 continue
 
             # check constraints
-            if price < 3500 or price > 10000000:
+            min_price = self.available[cars['make_name']][cars['model_name']]['min_price']
+            max_price = self.available[cars['make_name']][cars['model_name']]['max_price']
+            
+            if price < min_price or price > max_price:
                 continue
 
             year_filter = self.available[cars['make_name']][cars['model_name']]['year_filter']
