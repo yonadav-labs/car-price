@@ -51,7 +51,7 @@
                                      {% elif car_name != None %} {% url 'year' car_name=car_name|slugify brand=name|slugify %}
                                      {% else %} {% url 'brand' car_name=name|slugify %} {% endif %}">{{name}}</a> </td>
                         {% for cn in res|dict:name %}
-                        <td> <div style="max-width: 112px;">{% if res|dict:name|dict:cn|dict:'percent' != None %}{{currency.currency}}{%endif%}{{res|dict:name|dict:cn|dict:'davg'|currency}} {% if res|dict:name|dict:cn|dict:'percent' != None %}<span style="float:right;">(<span style="color: {%if res|dict:name|dict:cn|dict:'percent'|getFloat < 0.0 %} red; {%else%} #0ea600; {%endif%}">{{res|dict:name|dict:cn|dict:'percent'}} %</span>)</span>{% endif %}</div></td>
+                        <td> <div style="max-width: 115px;">{% if res|dict:name|dict:cn|dict:'percent' != None %}{{currency.currency}}{%endif%}{{res|dict:name|dict:cn|dict:'davg'|currency}} {% if res|dict:name|dict:cn|dict:'percent' != None %}<span style="float:right;">(<span style="color: {%if res|dict:name|dict:cn|dict:'percent'|getFloat < 0.0 %} red; {%else%} #0ea600; {%endif%}">{{res|dict:name|dict:cn|dict:'percent'}} %</span>)</span>{% endif %}</div></td>
                         {% endfor %}
                     </tr>
                     {% endfor %}

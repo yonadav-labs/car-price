@@ -21,7 +21,7 @@ class CarPriceSpider(scrapy.Spider):
                           "X-Requested-With": "XMLHttpRequest"}
 
         self.available = db_manage.getGenre()
-        # self.log(str(self.available)+'@@@@@@@')
+        self.log(str(self.available)+'@@@@@@@')
         db_manage.setUpdateFlag() ##@@##
 
     def start_requests(self):
