@@ -40,11 +40,11 @@ def save(item):
 
 
 def setUpdateFlag():
-    # Car.objects.all().update(updated=0)       ##@@##
-    pass
+    Car.objects.all().update(updated=0)       ##@@##
+    # pass
 
 
 def removeNotCar():
-    # Car.objects.filter(updated=0).delete()    ##@@##
-    pass
+    Car.objects.filter(updated=0).delete()    ##@@##
+    # pass
     
