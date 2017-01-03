@@ -170,7 +170,10 @@ def getChartData(param, currency_rate, type=None):
         tp_chartDataForCountry[item["country"]].append([float(item["year"]), item["davg"]])
 
     chartDataForCountry = []
-    for name in tp_chartDataForCountry:
+    # for name in tp_chartDataForCountry:   ##@@##
+    for country in settings.COUNTRY:
+        name = country['name']
+
         data = sorted(tp_chartDataForCountry[name], key=getKey)
         chartDataForCountry.append({"name": name, "data": data})
 
